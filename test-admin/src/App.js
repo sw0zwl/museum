@@ -9,8 +9,9 @@ import jsonServerProvider from 'ra-data-json-server';
 const dataProvider = jsonServerProvider('https://my-json-server.typicode.com/sw0zwl/museum');
 const App = () => (
     <Admin dataProvider={dataProvider}>
+        <Resource name="users" list={ListGuesser} />
         <Resource name="posts" list={ListGuesser} />
-        </Admin>
+    </Admin>
   );
 
 export default App;
