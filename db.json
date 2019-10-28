@@ -49,9 +49,11 @@
   ],
   "posts": [
     {"id": 1,
-     "name": "Jhon"}
-  ],
+     "name": "Jhon"},
+     {"id": 2,
+      "name": "Frank"}
+   ],
   "orders": [
-    
+
   ]
 }
