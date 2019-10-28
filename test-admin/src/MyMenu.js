@@ -1,12 +1,15 @@
-import React from 'react';
+// in src/Menu.js
+import React, { createElement } from 'react';
 import { connect } from 'react-redux';
-import { MenuItemLink, getResources, Responsive } from 'react-admin';
-import { withRouter } from 'react-router-dom';
+import { MenuItemLink, getResources } from 'react-admin';
+import LabelIcon from '@material-ui/icons/Label';
 
-const MyMenu = ({ resources, onMenuClick, logout }) => (
+import Responsive from '../layout/Responsive';
+
+const Menu = ({ resources, onMenuClick, logout }) => (
     <div>
         {resources.map(resource => (
-            MenuItemLink
+            <MenuItemLink
                 key={resource.name}
                 to={`/${resource.name}`}
                 primaryText={resource.options && resource.options.label || resource.name}
@@ -14,7 +17,11 @@ const MyMenu = ({ resources, onMenuClick, logout }) => (
                 onClick={onMenuClick}
             />
         ))}
-        <MenuItemLink to="/custom-route" primaryText="Miscellaneous" onClick={onMenuClick} />
+        <MenuItemLink
+            to="/custom-route"
+            primaryText="Miscellaneous"
+            leftIcon={<LabelIcon />}
+            onClick={onMenuClick} />
         <Responsive
             small={logout}
             medium={null} // Pass null to render nothing on larger devices
@@ -26,7 +33,4 @@ const mapStateToProps = state => ({
     resources: getResources(state),
 });
 
-export default withRouter(connect(mapStateToProps)(MyMenu));
-        ))}
-    </div>
-)
+export default withRouter(connect(mapStateToProps)(Menu));
