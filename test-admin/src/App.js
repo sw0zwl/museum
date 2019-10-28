@@ -9,8 +9,9 @@ import jsonServerProvider from 'ra-data-json-server';
 const dataProvider = jsonServerProvider('https://my-json-server.typicode.com/sw0zwl/museum');
 const App = () => (
     <Admin dataProvider={dataProvider}>
-        <Resource name="users" list={ListGuesser} />
-        <Resource name="posts" list={ListGuesser} />
+        <Resource name="users" options={{label: '用户'}} list={ListGuesser} />
+        <Resource name="posts" options={{ label: '发布' }} list={ListGuesser} />
+        <Resource name="products" options={{ label: '商品' }} list={ListGuesser} />
     </Admin>
   );
 
