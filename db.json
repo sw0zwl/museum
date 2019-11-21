@@ -62,8 +62,8 @@
         "height": 25.02,
         "price": 23,
         "thumbnail": "https://marmelab.com/posters/animals-1.jpeg",
-        "image": 'https://marmelab.com/posters/animals-1.jpeg',
-        "description": 'Esse sed earum sapiente molestiae. Occaecati iusto vel non. Ex laboriosam voluptatum praesentium consequatur et officiis id explicabo. Ullam cupiditate id. Autem mollitia dolorem aut nam.',
+        "image": "https://marmelab.com/posters/animals-1.jpeg",
+        "description": "Esse sed earum sapiente molestiae. Occaecati iusto vel non. Ex laboriosam voluptatum praesentium consequatur et officiis id explicabo. Ullam cupiditate id. Autem mollitia dolorem aut nam.",
         "stock": 160
       },
       {
@@ -74,8 +74,8 @@
         "height": 25.02,
         "price": 23,
         "thumbnail": "https://marmelab.com/posters/animals-1.jpeg",
-        "image": 'https://marmelab.com/posters/animals-1.jpeg',
-        "description": 'Esse sed earum sapiente molestiae. Occaecati iusto vel non. Ex laboriosam voluptatum praesentium consequatur et officiis id explicabo. Ullam cupiditate id. Autem mollitia dolorem aut nam.',
+        "image": "https://marmelab.com/posters/animals-1.jpeg",
+        "description": "Esse sed earum sapiente molestiae. Occaecati iusto vel non. Ex laboriosam voluptatum praesentium consequatur et officiis id explicabo. Ullam cupiditate id. Autem mollitia dolorem aut nam.",
         "stock": 160
       }
    ],
