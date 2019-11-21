@@ -54,10 +54,22 @@
       "name": "Frank"}
    ],
    "products": [
-    {"id": 1,
-     "name": "Jhon"},
-     {"id": 2,
-      "name": "Frank"}
+      {
+        "id": 0,
+        "category_id": 0,
+        "reference": "an-wdynd-L",
+        "width": 14.97,
+        "height": 25.02,
+        "price": 23,
+        "thumbnail": 'https://marmelab.com/posters/animals-1.jpeg',
+        "image": 'https://marmelab.com/posters/animals-1.jpeg',
+        "description": 'Esse sed earum sapiente molestiae. Occaecati iusto vel non. Ex laboriosam voluptatum praesentium consequatur et officiis id explicabo. Ullam cupiditate id. Autem mollitia dolorem aut nam.',
+        "stock": 160
+      },
+      {
+        "id": 2,
+        "name": "Frank"
+      }
    ],
   "orders": [
 
