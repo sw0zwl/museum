@@ -88,8 +88,8 @@
       "Title": "glass",
       "Dynasty": "Ming",
       "Category": "TaoCi",
-      "LargeImage": "http://localhost:8000/public/collections/bronze1.jpg",
-      "SmallImage": "http://localhost:8000/public/collections/bronze1.jpg",
+      "LargeImage": "https://github.com/sw0zwl/museum/blob/master/buddha1.jpg?raw=true",
+      "SmallImage": "http://localhost:8000/public/collections/buddha1.jpg",
       "Content": "It is a really good collection, please have a look!"
      }    
   ]
