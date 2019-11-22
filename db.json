@@ -81,5 +81,16 @@
    ],
   "orders": [
 
+  ],
+  "collections": [
+    {
+      "ID": 2,
+      "Title": "glass",
+      "Dynasty": "Ming",
+      "Category": "TaoCi",
+      "LargeImage": "http://localhost:8000/public/collections/bronze1.jpg",
+      "SmallImage": "http://localhost:8000/public/collections/bronze1.jpg",
+      "Content": "It is a really good collection, please have a look!"
+     }    
   ]
 }
