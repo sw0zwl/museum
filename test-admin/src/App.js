@@ -1,22 +1,60 @@
 import React from 'react';
-import { Route } from 'react-router';
-import logo from './logo.svg';
 import './App.css';
-import { UserList } from './users';
-import { Admin, Resource, ListGuesser } from 'react-admin';
+import { Admin, Resource } from 'react-admin';
+import ThemeReducer from './themeReducer'
+import simpleRestProvider from './mx-data-simple-rest';
 
-import jsonServerProvider from 'ra-data-json-server';
+import notifications from './notifications'
+import collections from './collections'
+import splashes from './splashes'
+import about from './about'
+import map from './map'
 
-import { Login, Layout } from './layout';
+import { Layout } from './layout';
+import {Dashboard} from './dashboard'
 
-const dataProvider = jsonServerProvider('https://my-json-server.typicode.com/sw0zwl/museum');
+import polyglotI18nProvider from 'ra-i18n-polyglot';
+import chineseMessages from './i18n/cn';
+
+const i18nProvider = polyglotI18nProvider(locale => {
+    if (locale === 'en') {
+      return chineseMessages;
+    }
+
+    // Always fallback on english
+    return chineseMessages;
+}, 'en');
+
+/*
+const httpClient = (url, options = {}) => {
+    if (!options.headers) 
+    {
+        options.headers = new Headers({ Accept: 'application/json' });
+    }
+
+    // add your own headers here
+    options.headers.set('Content-Type', 'application/json');
+
+  return fetchUtils.fetchJson(url, options);
+};
+*/
+
+//const dataProvider = jsonServerProvider('https://my-json-server.typicode.com/sw0zwl/museum');
+//const dataProvider = simpleRestProvider('http://192.168.20.7:8000/v1');
+const dataProvider = simpleRestProvider('http://localhost:8000/v1');
 const App = () => (
     <Admin 
-      appLayout={Layout}
-      dataProvider={dataProvider}>
-        <Resource name="users" options={{label: '首页导览'}} list={ListGuesser} />
-        <Resource name="posts" options={{ label: '藏品管理' }} list={ListGuesser} />
-        <Resource name="products" options={{ label: '关于设置' }} list={ListGuesser} />
+      customReducers={{theme: ThemeReducer}}
+      dataProvider={dataProvider}
+      i18nProvider={i18nProvider}
+      dashboard={Dashboard}
+      layout={Layout}
+    >
+        <Resource name="splashes" {...splashes} />
+        <Resource name="notifications" {...notifications} />
+        <Resource name="map" {...map} />
+        <Resource name="collections" {...collections} />
+        <Resource name="about" {...about} />
     </Admin>
   );
 

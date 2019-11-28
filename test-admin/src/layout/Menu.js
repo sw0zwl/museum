@@ -1,160 +1,129 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import compose from 'recompose/compose';
-import SettingsIcon from '@material-ui/icons/Settings';
-import LabelIcon from '@material-ui/icons/Label';
-import { withRouter } from 'react-router-dom';
-import {
-    translate,
-    DashboardMenuItem,
-    MenuItemLink,
-    Responsive,
-} from 'react-admin';
+import { useSelector } from 'react-redux';
+import { useTranslate, MenuItemLink, DashboardMenuItem } from 'react-admin';
+import HomeIcon from '@material-ui/icons/HomeRounded';
 
-import visitors from '../visitors';
-import orders from '../orders';
-import invoices from '../invoices';
-import products from '../products';
-import categories from '../categories';
-import reviews from '../reviews';
-import SubMenu from './SubMenu';
+import splashes from '../splashes';
+import notifications from '../notifications';
+import collections from '../collections';
+import map from '../map';
+import about from '../about';
+import SubMenu from './SubMenu'
 
-class Menu extends Component {
-    state = {
-        menuCatalog: false,
-        menuSales: false,
-        menuCustomers: false,
+const Menu = ({ onMenuClick, dense, logout }) => {
+    const [state, setState] = useState({
+        menuHome: false,
+        menuMap: false,
+        menuCollection: false,
+    });
+    const translate = useTranslate();
+    const open = useSelector(state => state.admin.ui.sidebarOpen);
+    useSelector(state => state.theme); // force rerender on theme change
+
+    const handleToggle = menu => {
+        setState(state => ({ ...state, [menu]: !state[menu] }));
     };
 
-    static propTypes = {
-        onMenuClick: PropTypes.func,
-        logout: PropTypes.object,
-    };
-
-    handleToggle = menu => {
-        this.setState(state => ({ [menu]: !state[menu] }));
-    };
-
-    render() {
-        const { onMenuClick, open, logout, translate } = this.props;
-        return (
-            <div>
-                {' '}
-                <DashboardMenuItem onClick={onMenuClick} />
-                <SubMenu
-                    handleToggle={() => this.handleToggle('menuSales')}
-                    isOpen={this.state.menuSales}
-                    sidebarIsOpen={open}
-                    name="pos.menu.sales"
-                    icon={<orders.icon />}
-                >
-                    <MenuItemLink
-                        to={`/commands`}
-                        primaryText={translate(`resources.commands.name`, {
-                            smart_count: 2,
-                        })}
-                        leftIcon={<orders.icon />}
-                        onClick={onMenuClick}
-                    />
-                    <MenuItemLink
-                        to={`/invoices`}
-                        primaryText={translate(`resources.invoices.name`, {
-                            smart_count: 2,
-                        })}
-                        leftIcon={<invoices.icon />}
-                        onClick={onMenuClick}
-                    />
-                </SubMenu>
-                <SubMenu
-                    handleToggle={() => this.handleToggle('menuCatalog')}
-                    isOpen={this.state.menuCatalog}
-                    sidebarIsOpen={open}
-                    name="pos.menu.catalog"
-                    icon={<products.icon />}
-                >
-                    <MenuItemLink
-                        to={`/products`}
-                        primaryText={translate(`resources.products.name`, {
-                            smart_count: 2,
-                        })}
-                        leftIcon={<products.icon />}
-                        onClick={onMenuClick}
-                    />
-                    <MenuItemLink
-                        to={`/categories`}
-                        primaryText={translate(`resources.categories.name`, {
-                            smart_count: 2,
-                        })}
-                        leftIcon={<categories.icon />}
-                        onClick={onMenuClick}
-                    />
-                </SubMenu>
-                <SubMenu
-                    handleToggle={() => this.handleToggle('menuCustomer')}
-                    isOpen={this.state.menuCustomer}
-                    sidebarIsOpen={open}
-                    name="pos.menu.customers"
-                    icon={<visitors.icon />}
-                >
-                    <MenuItemLink
-                        to={`/customers`}
-                        primaryText={translate(`resources.customers.name`, {
-                            smart_count: 2,
-                        })}
-                        leftIcon={<visitors.icon />}
-                        onClick={onMenuClick}
-                    />
-                    <MenuItemLink
-                        to={`/segments`}
-                        primaryText={translate(`resources.segments.name`, {
-                            smart_count: 2,
-                        })}
-                        leftIcon={<LabelIcon />}
-                        onClick={onMenuClick}
-                    />
-                </SubMenu>
+    return (
+        <div>
+            {' '}
+            <DashboardMenuItem onClick={onMenuClick} sidebarIsOpen={open} />
+            <SubMenu
+                handleToggle={() => handleToggle('menuHome')}
+                isOpen={state.menuHome}
+                sidebarIsOpen={open}
+                name="pos.menu.home"
+                icon={<HomeIcon />}
+                dense={dense}
+            >
                 <MenuItemLink
-                    to={`/reviews`}
-                    primaryText={translate(`resources.reviews.name`, {
+                    to={`/splashes`}
+                    primaryText={translate(`resources.splashes.name`, {
                         smart_count: 2,
                     })}
-                    leftIcon={<reviews.icon />}
+                    leftIcon={<splashes.icon />}
                     onClick={onMenuClick}
+                    sidebarIsOpen={open}
+                    dense={dense}
+                    replace
                 />
-                <Responsive
-                    xsmall={
-                        <MenuItemLink
-                            to="/configuration"
-                            primaryText={translate('pos.configuration')}
-                            leftIcon={<SettingsIcon />}
-                            onClick={onMenuClick}
-                        />
-                    }
-                    medium={null}
+                <MenuItemLink
+                    to={`/notifications`}
+                    primaryText={translate(`resources.notifications.name`, {
+                        smart_count: 2,
+                    })}
+                    leftIcon={<notifications.icon />}
+                    onClick={onMenuClick}
+                    sidebarIsOpen={open}
+                    dense={dense}
                 />
-                <Responsive
-                    small={logout}
-                    medium={null} // Pass null to render nothing on larger devices
+            </SubMenu>
+            <SubMenu
+                handleToggle={() => handleToggle('menuMap')}
+                isOpen={state.menuMap}
+                sidebarIsOpen={open}
+                name="pos.menu.map"
+                icon={<map.icon />}
+                dense={dense}
+            >
+                <MenuItemLink
+                    to={`/map`}
+                    primaryText={translate(`resources.map.name`, {
+                        smart_count: 2,
+                    })}
+                    leftIcon={<map.icon />}
+                    onClick={onMenuClick}
+                    sidebarIsOpen={open}
+                    dense={dense}
                 />
-            </div>
-        );
-    }
-}
+                <MenuItemLink
+                    to={`/map`}
+                    primaryText={translate(`resources.map.nickname`, {
+                        smart_count: 2,
+                    })}
+                    leftIcon={<map.icon />}
+                    onClick={onMenuClick}
+                    sidebarIsOpen={open}
+                    dense={dense}
+                />
+            </SubMenu>
+            <SubMenu
+                handleToggle={() => handleToggle('menuCollection')}
+                isOpen={state.menuCollection}
+                sidebarIsOpen={open}
+                name="pos.menu.collection"
+                icon={<collections.icon />}
+                dense={dense}
+            >
+                <MenuItemLink
+                    to={`/collections`}
+                    primaryText={translate(`resources.collections.name`, {
+                        smart_count: 2,
+                    })}
+                    leftIcon={<collections.icon />}
+                    onClick={onMenuClick}
+                    sidebarIsOpen={open}
+                    dense={dense}
+                />
+            </SubMenu>
+            <MenuItemLink
+                to={`/about`}
+                primaryText={translate(`resources.about.name`, {
+                    smart_count: 2,
+                })}
+                leftIcon={<about.icon />}
+                onClick={onMenuClick}
+                sidebarIsOpen={open}
+                dense={dense}
+            />
+        </div>
+    );
+};
 
-const mapStateToProps = state => ({
-    open: state.admin.ui.sidebarOpen,
-    theme: state.theme,
-    locale: state.i18n.locale,
-});
+Menu.propTypes = {
+    onMenuClick: PropTypes.func,
+    logout: PropTypes.object,
+};
 
-const enhance = compose(
-    withRouter,
-    connect(
-        mapStateToProps,
-        {}
-    ),
-    translate
-);
-
-export default enhance(Menu);
+export default Menu;
