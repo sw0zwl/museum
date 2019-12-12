@@ -42,7 +42,7 @@ const httpClient = (url, options = {}) => {
 //const dataProvider = jsonServerProvider('https://my-json-server.typicode.com/sw0zwl/museum');
 //const dataProvider = simpleRestProvider('http://192.168.20.7:8000/v1');
 //const dataProvider = simpleRestProvider('http://localhost:8000/v1');
-const dataProvider = simpleRestProvider('http://api.hoshinominami.com:65519/v1')
+const dataProvider = simpleRestProvider('https://api.hoshinominami.com:65519/v1')
 const App = () => (
     <Admin 
       customReducers={{theme: ThemeReducer}}
