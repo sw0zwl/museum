@@ -33,7 +33,7 @@ const ProductCreate = props => {
                     <ImageInput source="LargeImage" 
                                 accept="image/*"
                                 className={classes.LargeImage} 
-                                placeholder={<p>é€‰æ‹©æ–‡ä»¶...</p>}
+                                placeholder={<p>选择图片...</p>}
                                 validate={required()}>
                         <ImageField source="src" title="title" />
                     </ImageInput>                    
