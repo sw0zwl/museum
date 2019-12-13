@@ -4,6 +4,7 @@ import {
     FormTab,
     TabbedForm,
     TextInput,
+    NumberInput,
     useTranslate
 } from 'react-admin';
 import RichTextInput from 'ra-input-rich-text';
@@ -25,8 +26,8 @@ const ProductEdit = props => {
                     <Poster />
                     <TextInput source="uuid" fullWidth />
                     <TextInput source="title" fullWidth />
-                    <TextInput source="x" fullWidth />
-                    <TextInput source="y" fullWidth />
+                    <NumberInput source="x" fullWidth />
+                    <NumberInput source="y" fullWidth />
                 </FormTab>
                 <FormTab
                     label="resources.collections.tabs.description"
