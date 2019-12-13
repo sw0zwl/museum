@@ -134,21 +134,34 @@ exports.default = (function (apiUrl, httpClient) {
                 }) }); });
         },
         create: function (resource, params) {
-            return convertFileToBase64(params.data.LargeImage)
-                .then(base64file => {
-                    params.data.LargeImage = base64file
+            console.log(params.data)
+            if ('LargeImage' in params.data)
+            {
+                return convertFileToBase64(params.data.LargeImage)
+                    .then(base64file => {
+                        params.data.LargeImage = base64file
 
-                    return httpClient(apiUrl + "/" + resource, {
-                        method: 'POST',
-                        body: JSON.stringify(params.data)
-                    }).then(function (_a) {
-                        var json = _a.json;
-                        return ({
-                            data: json
+                        return httpClient(apiUrl + "/" + resource, {
+                            method: 'POST',
+                            body: JSON.stringify(params.data)
+                        }).then(function (_a) {
+                            var json = _a.json;
+                            return ({
+                                data: json
+                            });
                         });
+                    })
+            } else {
+                return httpClient(apiUrl + "/" + resource, {
+                    method: 'POST',
+                    body: JSON.stringify(params.data)
+                }).then(function (_a) {
+                    var json = _a.json;
+                    return ({
+                        data: json
                     });
-                })
-
+                });
+            }
         },
         delete: function (resource, params) {
             return httpClient(apiUrl + "/" + resource + "/" + params.id, {

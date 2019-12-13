@@ -41,6 +41,7 @@ export default {
             title: '地图设置',
             nickname: '藏品布展',
             fields: {
+                id: '序号',
                 address: 'Rue',
                 birthday: 'Anniversaire',
                 city: 'Ville',
@@ -82,6 +83,7 @@ export default {
                     total: 'Total',
                     unit_price: 'P.U.',
                 },
+                id: '序号',
                 LargeImage: '',
                 Title: '标题',
                 Content: '内容',
@@ -108,10 +110,22 @@ export default {
                 taxes: 'TVA',
             },
         },
+        stations: {
+            name: 'stations |||| 蓝牙信标',
+            fields: {
+                id: '序号',
+                uuid: 'uuid',
+                title: '标题',
+                x: '横坐标',
+                y: '纵坐标',
+                content: '详细内容'
+            },
+        },
         collections: {
             title: '藏品管理',
             name: 'Poster |||| 藏品管理',
             fields: {
+                id: '序号',
                 Title: '标题',
                 Dynasty: '朝代',
                 Category: '分类',
@@ -137,6 +151,7 @@ export default {
             name: 'Splashes |||| 轮播图片',
             title: '轮播图片',
             fields: {
+                id: '序号',
                 LargeImage: '图片',
                 Title: '标题',
                 Author:'作者',

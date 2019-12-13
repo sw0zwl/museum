@@ -7,6 +7,7 @@ import HomeIcon from '@material-ui/icons/HomeRounded';
 import splashes from '../splashes';
 import notifications from '../notifications';
 import collections from '../collections';
+import stations from '../stations'
 import map from '../map';
 import about from '../about';
 import SubMenu from './SubMenu'
@@ -78,11 +79,11 @@ const Menu = ({ onMenuClick, dense, logout }) => {
                     dense={dense}
                 />
                 <MenuItemLink
-                    to={`/map`}
-                    primaryText={translate(`resources.map.nickname`, {
+                    to={`/stations`}
+                    primaryText={translate(`resources.stations.name`, {
                         smart_count: 2,
                     })}
-                    leftIcon={<map.icon />}
+                    leftIcon={<stations.icon />}
                     onClick={onMenuClick}
                     sidebarIsOpen={open}
                     dense={dense}

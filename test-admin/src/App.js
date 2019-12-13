@@ -7,6 +7,7 @@ import simpleRestProvider from './mx-data-simple-rest';
 import notifications from './notifications'
 import collections from './collections'
 import splashes from './splashes'
+import stations from './stations'
 import about from './about'
 import map from './map'
 
@@ -54,6 +55,7 @@ const App = () => (
         <Resource name="splashes" {...splashes} />
         <Resource name="notifications" {...notifications} />
         <Resource name="map" {...map} />
+        <Resource name="stations" {...stations} />
         <Resource name="collections" {...collections} />
         <Resource name="about" {...about} />
     </Admin>

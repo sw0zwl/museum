@@ -7,7 +7,6 @@ import {
     ImageInput,
     ImageField,
 } from 'react-admin';
-import RichTextInput from 'ra-input-rich-text';
 
 export const styles = {
     price: { width: '7em' },
