@@ -6,10 +6,11 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { DeleteButton, EditButton, RichTextField} from 'react-admin';
+import LinesEllipsis from 'react-lines-ellipsis'
 
 const useStyles = makeStyles({
     media: {
-        height: '18em',
+        height: '16em',
     },
     title: {
         height: '2em',
@@ -18,6 +19,8 @@ const useStyles = makeStyles({
         height: '4em',
     },
 });
+
+
 
 const CardInfo = ({basePath, data, resource, id, Title, LargeImage, Content}) => {
     const classes = useStyles();
@@ -42,5 +45,7 @@ const CardInfo = ({basePath, data, resource, id, Title, LargeImage, Content}) =>
         </Card>
     );
 };
+
+
 
 export default CardInfo;
