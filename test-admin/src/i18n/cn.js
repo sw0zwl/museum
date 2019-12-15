@@ -131,6 +131,8 @@ export default {
                 Category: '分类',
                 Content: '详细说明',
                 LargeImage: '图片',
+                Status: '展览状态',
+                DisplayArea: '展示区域',
                 price: 'Prix',
                 reference: 'Référence',
                 stock_lte: 'Stock faible',

@@ -12,6 +12,7 @@ import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import LockIcon from '@material-ui/icons/Lock';
 
+
 import { Notification, useTranslate, useLogin, useNotify } from 'react-admin';
 
 import { lightTheme } from './themes';
@@ -23,13 +24,13 @@ const useStyles = makeStyles(theme => ({
         minHeight: '100vh',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        background: 'url(https://source.unsplash.com/random/1600x900)',
+        background: 'url(https://viajandoaleste.files.wordpress.com/2015/07/img_1231.jpg)',
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
     },
     card: {
         minWidth: 300,
-        marginTop: '6em',
+        marginTop: '13em',
     },
     avatar: {
         margin: '1em',
@@ -118,9 +119,7 @@ const Login = ({ location }) => {
                                     <LockIcon />
                                 </Avatar>
                             </div>
-                            <div className={classes.hint}>
-                                Hint: demo / demo
-                            </div>
+                   
                             <div className={classes.form}>
                                 <div className={classes.input}>
                                     <Field

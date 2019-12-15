@@ -35,7 +35,9 @@ export const styles = {
                 whiteSpace: "nowrap",
                 display: '-webkit-box',
                 webkitLineClamp: '1',
-                webkitBoxOrient: 'vertical',                
+                webkitBoxOrient: 'vertical',
+                
+
 },
     widthFormGroup: { display: 'inline-block' },
     heightFormGroup: { display: 'inline-block', marginLeft: 32 },
@@ -65,7 +67,7 @@ export const ProductFilter = props => (
 
 const NotificationList = props => {
     return (
-        <List
+        <List 
             {...props}
             perPage={10}
             sort={{ field: 'id', order: 'ASC' }}

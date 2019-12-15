@@ -16,7 +16,7 @@ const useStyles = makeStyles({
         height: '2em',
     },
     content: {
-        height: '4em',
+        height: '2em',
     },
 });
 
@@ -29,8 +29,14 @@ const CardInfo = ({basePath, data, resource, id, Title, LargeImage, Content}) =>
         <Card>
             <CardMedia image={LargeImage} className={classes.media} />
             <CardContent className={classes.content}>
-                <Typography variant="h5" component="h2">
-                    {Title}
+                <Typography variant="h6" component="h2">
+                   <LinesEllipsis
+                      text={Title}
+                      maxLine='1'
+                      ellipsis='...'
+                      trimRight
+                      basedOn='letters'            
+                    />
                 </Typography>
                 <Typography component="p">
                     <RichTextField source={Content}/>

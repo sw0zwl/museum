@@ -33,6 +33,10 @@ const ProductCreate = props => {
                     </TextInput>                    
                     <TextInput source="Content">
                     </TextInput>                    
+                    <TextInput source="Status">
+                    </TextInput> 
+                    <TextInput source="DisplayArea">
+                    </TextInput> 
                 </FormTab>
             </TabbedForm>
         </Create>

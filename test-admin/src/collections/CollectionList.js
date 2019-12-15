@@ -10,8 +10,8 @@ import GridList from './GridList';
 export const ProductFilter = props => (
     <Filter {...props}>
         <SearchInput source="Title" alwaysOn />
-        <TextInput source="Dynasty" />
-        <TextInput source="Category" />
+        
+
     </Filter>
 );
 
