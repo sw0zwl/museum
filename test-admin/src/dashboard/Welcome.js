@@ -8,7 +8,7 @@ import { useTranslate } from 'react-admin';
 
 const useStyles = makeStyles({
     media: {
-        height: '36em',
+        height: '33em',
     },
 });
 

@@ -11,7 +11,7 @@ import stations from './stations'
 import about from './about'
 import map from './map'
 
-import { Layout } from './layout';
+import {Login, Layout } from './layout';
 import {Dashboard} from './dashboard'
 
 import polyglotI18nProvider from 'ra-i18n-polyglot';
@@ -51,6 +51,7 @@ const App = () => (
       i18nProvider={i18nProvider}
       dashboard={Dashboard}
       layout={Layout}
+      loginPage={Login}
     >
         <Resource name="splashes" {...splashes} />
         <Resource name="notifications" {...notifications} />
