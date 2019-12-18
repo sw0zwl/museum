@@ -37,7 +37,7 @@ export default {
     },
     resources: {
         map: {
-            name: 'Map |||| 地图设置',
+            name: '地图 |||| 地图设置',
             title: '地图设置',
             nickname: '藏品布展',
             fields: {
@@ -71,7 +71,7 @@ export default {
             },
         },
         about: {
-            name: 'About |||| 关于配置',
+            name: '关于 |||| 关于配置',
             title: 'Commande n°%{reference}',
             fields: {
                 basket: {
@@ -95,7 +95,7 @@ export default {
             },
         },
         notifications: {
-            name: 'notifications |||| 首页公告',
+            name: '首页公告 |||| 首页公告',
             fields: {
                 id: '序号',
                 Title: '标题',
@@ -111,7 +111,7 @@ export default {
             },
         },
         stations: {
-            name: 'stations |||| 蓝牙信标',
+            name: '蓝牙信标 |||| 蓝牙信标',
             fields: {
                 id: '序号',
                 uuid: 'uuid',
@@ -123,7 +123,7 @@ export default {
         },
         collections: {
             title: '藏品管理',
-            name: 'Poster |||| 藏品管理',
+            name: '藏品 |||| 藏品管理',
             fields: {
                 id: '序号',
                 Title: '标题',
@@ -150,7 +150,7 @@ export default {
             },
         },
         splashes: {
-            name: 'Splashes |||| 轮播图片',
+            name: '轮播图片 |||| 轮播图片',
             title: '轮播图片',
             fields: {
                 id: '序号',
