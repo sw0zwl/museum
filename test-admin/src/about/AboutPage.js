@@ -15,7 +15,8 @@ import Chip from '@material-ui/core/Chip';
 import { makeStyles } from '@material-ui/core/styles';
 import CardMedia from '@material-ui/core/CardMedia';
 
-const mediaUrl = `https://api.hoshinominami.com:65519/public/about/about.jpg`;
+//const mediaUrl = `https://api.hoshinominami.com:65519/public/about/about.jpg`;
+const mediaUrl = `https://mx-soft.com:65519/public/about/about.jpg`;
 
 const useQuickFilterStyles = makeStyles(theme => ({
     root: {

@@ -12,7 +12,8 @@ const useStyles = makeStyles({
     },
 });
 
-const mediaUrl = `https://api.hoshinominami.com:65519/public/about/about.jpg`;
+// const mediaUrl = `https://api.hoshinominami.com:65519/public/about/about.jpg`;
+const mediaUrl = `https://mx-soft.com:65519/public/about/about.jpg`;
 
 const Welcome = () => {
     const translate = useTranslate();
