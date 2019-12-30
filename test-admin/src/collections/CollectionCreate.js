@@ -7,6 +7,7 @@ import {
     ImageInput,
     ImageField,
 } from 'react-admin';
+import RichTextInput from 'ra-input-rich-text';
 
 export const styles = {
     price: { width: '7em' },
@@ -25,18 +26,10 @@ const ProductCreate = props => {
                     <ImageInput source="LargeImage" accept="image/*" placeholder={<p>选择图片...</p>}>
                         <ImageField source="src" title="title" />
                     </ImageInput>                    
-                    <TextInput source="Title">
-                    </TextInput>                    
-                    <TextInput source="Dynasty">
-                    </TextInput>                    
-                    <TextInput source="Category">
-                    </TextInput>                    
-                    <TextInput source="Content">
-                    </TextInput>                    
-                    <TextInput source="Status">
-                    </TextInput> 
-                    <TextInput source="DisplayArea">
-                    </TextInput> 
+                    <TextInput source="Title"/>
+                    <TextInput source="Dynasty"/>
+                    <TextInput source="Category"/>
+                    <RichTextInput source="Content" label=""/>
                 </FormTab>
             </TabbedForm>
         </Create>

@@ -29,6 +29,7 @@ const ProductCreate = props => {
                 <FormTab label="resources.collections.tabs.image">
                     <TextInput source="uuid" className={classes.uuid} validate={required()}>
                     </TextInput>                    
+                    <NumberInput source="mac" className={classes.mac} validate={required()}/>
                     <TextInput source="title" className={classes.title} validate={required()}>
                     </TextInput>                    
                     <NumberInput source="x" className={classes.x} validate={required()}>

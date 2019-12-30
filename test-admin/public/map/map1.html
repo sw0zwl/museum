@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TileLayer and Geo-Projections - TileLayer of IDENTITY projection</title>
+  <style type="text/css">
+    html,body{margin:0px;height:100%;width:100%}
+    .container{width:100%;height:100%}
+  </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maptalks/dist/maptalks.css">
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/maptalks/dist/maptalks.min.js"></script>
+  <body>
+    <div id="map" class="container"></div>
+
+    <script>
+      var map = new maptalks.Map('map', {
+        center:     [0, 0],
+        zoom:  2.5,
+        spatialReference : {
+          projection : 'identity',
+          resolutions : [
+            32, 16, 8, 4, 2, 1
+          ],
+          fullExtent : {
+            'top': 10000,
+            'left': -10000,
+            'bottom': -10000,
+            'right': 10000
+          }
+        }
+      });
+
+      var soccerField = [
+        // outline
+        new maptalks.Polygon(
+            [
+                [-1350, -2250], 
+                [-1350, 2250],
+                [1350, 2250],
+                [1350, -2250]
+            ],
+            {
+            symbol : {
+                lineWidth : 2,
+                lineColor : '#00f',
+                polygonFill : 'rgb(0, 129, 0)'
+            }
+        }),
+
+        // left-top
+        new maptalks.Rectangle([-1340, 2240], 890, 890, {
+          symbol : {
+            lineWidth : 1,
+            lineColor : '#fff',
+            polygonFill : 'rgb(129, 129, 120)'
+          }
+        }),
+
+        // left-bottom
+        new maptalks.Rectangle([-1340, -1340], 890, 890, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(129, 129, 120)'
+          }
+        }),
+
+        // right-bottom
+        new maptalks.Rectangle([890, -1340], 440, 890, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(129, 129, 120)'
+          }
+        }),
+
+        // right-top
+        new maptalks.Rectangle([890, 2240], 440, 890, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(129, 129, 120)'
+          }
+        }),
+
+        // table1
+        new maptalks.Rectangle([-1200, 1350], 200, 100, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('1',
+            [-1100, 1270],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table2
+        new maptalks.Rectangle([-940, 1350], 200, 100, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('2',
+            [-840, 1270],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table3
+        new maptalks.Rectangle([-680, 1350], 200, 100, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('3',
+            [-580, 1270],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table4
+        new maptalks.Rectangle([-450, 1700], 100, 200, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('4',
+            [-400, 1560],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table5
+        new maptalks.Rectangle([-450, 2000], 100, 200, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('5',
+            [-400, 1860],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table6
+        new maptalks.Rectangle([-250, 2250], 200, 100, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('6',
+            [-150, 2190],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table7
+        new maptalks.Rectangle([50, 2250], 200, 100, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('7',
+            [150, 2190],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table8
+        new maptalks.Rectangle([350, 2250], 200, 100, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('8',
+            [450, 2190],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table9
+        new maptalks.Rectangle([790, 2000], 100, 200, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('9',
+            [840, 1860],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table10
+        new maptalks.Rectangle([790, 1700], 100, 200, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('10',
+            [840, 1560],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table11
+        new maptalks.Rectangle([350, 1450], 250, 100, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('11',
+            [450, 1380],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table14
+        new maptalks.Rectangle([350, 1330], 200, 100, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('14',
+            [450, 1250],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table15
+        new maptalks.Rectangle([650, 1330], 250, 100, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('15',
+            [750, 1250],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table16
+        new maptalks.Rectangle([1000, 1330], 200, 100, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('16',
+            [1100, 1250],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table17
+        new maptalks.Rectangle([1240, 1130], 100, 250, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('17',
+            [1300, 980],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table18
+        new maptalks.Rectangle([1240, 730], 100, 250, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('18',
+            [1300, 580],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table25
+        new maptalks.Rectangle([1240, 330], 100, 250, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('25',
+            [1300, 180],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table26
+        new maptalks.Rectangle([1240, -70], 100, 250, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('26',
+            [1300, -230],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table27
+        new maptalks.Rectangle([1240, -470], 100, 250, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('27',
+            [1300, -620],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table28
+        new maptalks.Rectangle([1240, -870], 100, 250, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('28',
+            [1300, -1020],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+
+        // table31
+        new maptalks.Rectangle([350, -1240], 200, 100, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('31',
+            [450, -1300],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table30
+        new maptalks.Rectangle([650, -1240], 250, 100, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('30',
+            [750, -1300],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table29
+        new maptalks.Rectangle([1000, -1240], 200, 100, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('29',
+            [1100, -1300],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table32
+        new maptalks.Rectangle([350, -1360], 250, 100, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('32',
+            [500, -1430],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table33
+        new maptalks.Rectangle([790, -1600], 100, 200, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('33',
+            [850, -1750],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table34
+        new maptalks.Rectangle([790, -1900], 100, 200, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('34',
+            [850, -2050],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+
+        // table37
+        new maptalks.Rectangle([-250, -2130], 200, 100, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('37',
+            [-150, -2190],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table36
+        new maptalks.Rectangle([50, -2130], 200, 100, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('36',
+            [150, -2190],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table35
+        new maptalks.Rectangle([350, -2130], 200, 100, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('35',
+            [450, -2190],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+
+        // table39
+        new maptalks.Rectangle([-450, -1600], 100, 200, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('39',
+            [-390, -1750],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table38
+        new maptalks.Rectangle([-450, -1900], 100, 200, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('38',
+            [-390, -2050],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+
+        // table44
+        new maptalks.Rectangle([-1200, -1240], 200, 100, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('44',
+            [-1100, -1300],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table43
+        new maptalks.Rectangle([-940, -1240], 200, 100, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('43',
+            [-840, -1300],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table42
+        new maptalks.Rectangle([-680, -1240], 200, 100, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('42',
+            [-580, -1300],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table12
+        new maptalks.Rectangle([-450, 550], 300, 100, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('12',
+            [-300, 490],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table13
+        new maptalks.Rectangle([0, 550], 300, 100, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('13',
+            [150, 490],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table20
+        new maptalks.Rectangle([-450, 430], 300, 100, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('20',
+            [-300, 360],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table19
+        new maptalks.Rectangle([0, 430], 300, 100, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('19',
+            [150, 360],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table21
+        new maptalks.Rectangle([-650, 270], 100, 250, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('21',
+            [-590, 120],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table22
+        new maptalks.Rectangle([-650, -130], 100, 250, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('22',
+            [-590, -280],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table23
+        new maptalks.Rectangle([-450, -430], 300, 100, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('23',
+            [-300, -490],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table24
+        new maptalks.Rectangle([0, -430], 300, 100, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('24',
+            [150, -490],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table41
+        new maptalks.Rectangle([-450, -550], 300, 100, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('41',
+            [-300, -620],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // table40
+        new maptalks.Rectangle([0, -550], 300, 100, {
+          symbol : {
+            lineWidth : 2,
+            lineColor : '#fff',
+            polygonFill : 'rgb(225, 229, 0)'
+          }
+        }),
+
+        new maptalks.Label('40',
+            [150, -620],
+            {
+            'draggable' : true,
+            'textSymbol': {
+            'textFaceName' : 'monospace',
+            'textFill' : '#34495e',
+            'textHaloFill' : '#fff',
+            'textHaloRadius' : 4,
+            'textSize' : 12,
+            'textWeight' : 'bold',
+            'textVerticalAlignment' : 'top'
+          }
+        }),
+
+        // halfway line
+//        new maptalks.LineString([[0, -260], [0, 260]], {
+//          symbol : {
+//            lineColor : '#fff',
+//            lineWidth : 2
+//          }
+//        }),
+
+        // center circle
+//        new maptalks.Circle([0, 0], 70, {
+//          symbol : {
+//            lineColor : '#fff',
+//            lineWidth : 2
+//          }
+//        }),
+
+        // penalty arc
+//        new maptalks.Sector([-315, 0], 60, -60, 60, {
+//          symbol : {
+//            lineColor : '#fff',
+//            lineWidth : 2
+//          }
+//        }),
+
+        // penalty mark
+//        new maptalks.Marker([315, 0], {
+//          symbol : {
+//            markerType : 'ellipse',
+//            markerWidth : 2,
+//            markerHeight : 2,
+//            markerFill : '#fff',
+//            markerLineColor : '#fff'
+//          }
+//        }),
+      ];
+
+      new maptalks.VectorLayer('field', soccerField).addTo(map);
+
+
+      var layer = new maptalks.VectorLayer('vector', { forceRenderOnMoving : true }).addTo(map);
+      var marker = new maptalks.Marker([0, 0]).addTo(layer);
+
+      marker.setCoordinates([250, 1250]);
+
+    </script>
+  </body>
+</html>

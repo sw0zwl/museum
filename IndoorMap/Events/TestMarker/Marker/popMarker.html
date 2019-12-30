@@ -1,0 +1,339 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+	<meta charset="UTF-8">
+	<title>室内地图popMarker示例|室内三维地图引擎|易景空间地图</title>
+	<meta name="keywords" content="室内地图popMarker示例,室内地图,三维地图引擎,三维地图制作,室内定位,易景空间地图" />
+	<meta name="description" content="室内地图添加标注示例,易景室内三维地图引擎提供地图浏览、缩放、旋转、图层显隐等基础功能，支持自定义室内地图显示风格及样式，可自动绘制楼层热力图、散点图等专题地图，快速进行空间大数据分析展示。支持跨楼层精准的点到点之间的最短、最优路径计算，支持对路径结果进行导航和动画,并提供丰富的地图主题资源供二次开发调用。" />
+	<link rel="shortcut icon" type="image/ico" href="../image/favicon.ico">
+	<link href="css/common.css" rel="stylesheet">
+	<style type="text/css">
+		button {
+			padding: 7px 11px;
+			background-color: #fff;
+			border: none;
+			cursor: pointer;
+			border-radius: 3px;
+		}
+
+		.addmarker-floor.btn-floor-vertical {
+			position: absolute;
+			left: 10px;
+			bottom: 45px;
+		}
+
+		#container {
+			position: absolute;
+			width: 100%;
+			top: 40px;
+			bottom: 0px;
+		}
+		#tool-tip {
+			position: absolute;
+			color: #fff;
+			font-size: 18px;
+			height: 25px;
+			line-height: 25px;
+			padding: 0 5px;
+			z-index: 2;
+			pointer-events: none;
+			background-color: rgba(0, 0, 0, 0.3);
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+			display: none;
+		}
+		/* 以下是自定义气泡标注样式 */
+		.myPopMarker{
+		    padding: 0;
+			padding-right: 36px;
+			background: #aaa;
+			color: #fff;
+			border:1px solid #5e5e5e;
+		}
+		.myPopClose{  
+			position: absolute;
+			top: 0;
+			right: 0;
+			width: 43px;
+			height: 25px;
+			text-align: center;
+			background-color: honeydew;
+			color: #000;
+			cursor:pointer;
+		}
+	</style>
+</head>
+<body>
+	<div id="container"></div>
+	<div class="loading">
+		<div class="lodingImg"></div>
+	</div>
+	<nav class="navbar navbar-inverse">
+		<div class="container-fluid">
+			<h1><a href="/" title="室内地图-室内三维地图" target="_blank">易景室内三维地图引擎</a> (popMarker示例)</h1>
+			<div class="tips-right">
+					<span class="tip1"></span>
+					<span class="tip2"></span>
+				</div>
+				<div class="tips-msg">
+					<div class="msg msg1">
+						<div class="erweima"></div>
+						<p>手机扫一扫进入体验</p>
+					</div>
+					<div class="msg msg2">
+						<h4>popMarker示例</h4>
+						<p>1. 用于详细描述某位置信息</p>
+						<p>2. 使用 new esmap.ESPopMarker({...}) 创建</p>
+		
+						<div style="display: none">室内地图添加标注示例,易景室内三维地图引擎提供地图浏览、缩放、旋转、图层显隐等基础功能，支持自定义室内地图显示风格及样式，可自动绘制楼层热力图、散点图等专题地图，快速进行空间大数据分析展示。支持跨楼层精准的点到点之间的最短、最优路径计算，支持对路径结果进行导航和动画,并提供丰富的地图主题资源供二次开发调用。</div>
+					</div>
+				</div>
+		</div>
+	</nav>
+	<div class="viewmode-floor btn-floor-vertical" data-toggle="buttons">
+		<button id="btn2D" class="btn btn-default">2D</button>
+		<button id="btn3D" class="btn btn-default">3D</button>
+	</div>
+
+	<div class="addmarker-floor btn-floor-vertical" data-toggle="buttons">
+		<button id="btn2" class="btn btn-default leftbtn">添加标注</button>
+		<button id="btn6" class="btn btn-default leftbtn">清除标注</button>
+	</div>
+	<span id="tool-tip"></span>
+	<script src="../lib/config.js"></script>
+	<script src="../lib/esmap.min.js"></script>
+	<script src="../lib/jquery-2.1.4.min.js"></script>
+    <script src="../lib/jquery.qrcode.min.js"></script>
+    <script src="../lib/tips_controls.js"></script>
+	<script type="text/javascript">
+		//定义全局map变量
+		var map;
+		var esmapID = getQueryString('id') || defaultOpt.mapID;
+		var styleid = getQueryString("styleid") || defaultOpt.themeID;
+		var im;
+		var floorLayer;
+		var keepPressed = false;
+		var keepPressedObj = null;
+		var popMarker;
+		var keepOpen = true;
+		var platForm;
+		var mousePos;
+		var coord;
+		$(function () {
+			platForm = esmap.ESMapUtil.getPlatform();
+			var floorControl;
+			map = new esmap.ESMap({
+				container: $('#container')[0],
+				mapDataSrc: defaultOpt.mapDataUrl,
+				mapThemeSrc: defaultOpt.mapThemeUrl,
+				token: "escope",
+				editMode:true
+			});
+			map.openMapById(esmapID); //sceneId
+			map.showCompass = true;
+			map.showScaler = false;
+			map.on('loadComplete', function () {
+				floorLayer = map.getFloor(1);
+				// map.panorama = true
+			});
+			map.on("mapClickNode", function (e) {
+				console.log(e)
+				if (e.nodeType == esmap.ESNodeType.IMAGE_MARKER) {
+					keepOpen && e.data_.popMarker && e.data_.popMarker.toggle()
+				}
+			})
+			map.on("mapKeepPress", function (e) {
+				keepPressed = true;
+				map.controls.enablePan = false;
+				map.controls.enableRotate = false;
+				keepPressedObj = e;
+				e.flash && e.flash();
+			})
+			map.on("update", function () {
+				var h = $("#container").height()
+				var w = -$("#container").width()
+				if (map.mapPicker.curMouse) {
+					var screenCoord = {
+						x: map.mapPicker.curMouse.x * h,
+						y: map.mapPicker.curMouse.y * w,
+						z: 0
+					}
+				}
+
+			})
+			map.on("onOver", function (e) {
+				if (mousePos) {
+					$tooltip = $("#tool-tip")
+					$tooltip.html(e.name).css({
+						left: mousePos.x - $tooltip.width() - 20,
+						top: mousePos.y - 25 / 2
+					}).show();
+				}
+			})
+			map.on("onLeave", function () {
+				$tooltip = $("#tool-tip");
+				$tooltip.hide();
+			})
+			$('#container')[0].onmousemove = function (event) {
+				mousePos = {
+					x: event.pageX,
+					y: event.pageY
+				}
+				onMove(event)
+			}
+			//touch 事件需要绑定到内层canvas。否则绑定不成功
+			$("#container canvas")[0].ontouchmove = function (event) {
+				onMove(event)
+			}
+			$('#container')[0].onmouseup = function () {
+				onUp()
+			}
+			$('#container canvas')[0].ontouchend = function (e) {
+				onUp()
+			}
+
+			//清除功能
+			var removeAll = function () {
+				floorLayer.removeLayersByTypes([esmap.ESLayerType.TEXT_MARKER, esmap.ESLayerType.IMAGE_MARKER]);
+			}
+			$("#btn2").on('click', function () {
+				removeAll();
+				var layer = new esmap.ESLayer('imageMarker');
+				var gpos = floorLayer.mapCoord;
+				im = new esmap.ESImageMarker({
+					x: gpos.x - 20,
+					//设置弹框的y轴
+					y: gpos.y - 20,
+					url: 'image/user.png',
+					size: 64,
+					height: 3,
+					// id: 2018,
+					name: '长按拖动，点击显示气泡标注'
+				});
+				layer.addMarker(im);
+				// x: gpos.x+10,
+				// 	y: gpos.y+20,
+				floorLayer.addLayer(layer);
+				//添加信息窗
+				var popMarker1 = new esmap.ESPopMarker({
+					mapCoord: {
+						//设置弹框的x轴
+						x: gpos.x + 20,
+						//设置弹框的y轴
+						y: gpos.y + 30,
+						height: 4, //控制信息窗的高度
+						//设置弹框位于的楼层
+						fnum: 1
+					},
+					//设置弹框的宽度
+					width: 200,
+					//设置弹框的高度
+					height:70,
+					marginTop: 10,  //距离地面的高度
+					//设置弹框的内容
+					content: '<a target="_bank" href="http://www.esmap.cn">易景空间地图官方网站</a>',
+					closeCallBack: function () {
+						//信息窗点击关闭操作
+						// alert('信息窗关闭了！');
+					},
+					created: function () {}
+				});
+				//添加信息窗
+				var popMarker2 = new esmap.ESPopMarker({
+					mapCoord: {
+						//设置弹框的x轴
+						x: gpos.x - 20,
+						//设置弹框的y轴
+						y: gpos.y - 20,
+						height: 4, //控制信息窗的高度
+						//设置弹框位于的楼层
+						fnum: 1
+					},
+					className:"myPopMarker",  //自定义popMarker样式。在css里配置
+					//设置弹框的宽度
+					width: 300,
+					//设置弹框的高度
+					height: 150,
+					marginTop:10,  //弹框距离地面的高度
+					//设置弹框的内容
+					content: '<h3>自定义样式popMarker</h3><p>点击下方图片标注切换显示隐藏；长按图片标注可以拖动</p><div class="myPopClose">关闭</div>',
+					closeCallBack: function () {
+						//信息窗点击关闭操作
+						// alert('信息窗关闭了！');
+					},
+					created: function (e) {
+						//创建完成钩子
+
+						$(".myPopClose").click(function(){
+							//关闭删除
+							popMarker2.close();
+							//为自定义关闭按钮绑定隐藏事件
+							//popMarker.hide();
+						})
+					}
+				});
+				popMarker = popMarker2
+				im.data_.popMarker = popMarker;
+			});
+			//动态添加标注事件
+			$("#btn5").on('click', function () {
+				isDynamicMarker = true;
+			});
+			$("#btn6").on('click', function () {
+				removeAll();
+				popMarker && popMarker.close();
+				im = null;
+			});
+			//2维显示
+			$('#btn2D').on('click', function () {
+				map.viewMode = esmap.ESViewMode.MODE_2D; //2维模式
+			});
+			//3维显示
+			$('#btn3D').on('click', function () {
+				map.viewMode = esmap.ESViewMode.MODE_3D;; //3维模式
+			});
+		});
+
+		function onMove(event) {
+			if (keepPressed) {
+				var fnum = map.focusFloorNum;
+				//获取地图视图的边框
+				var box = (event.target || event.srcElement).getBoundingClientRect();
+				var screenCoord = {
+					x: (event.clientX || event.changedTouches[0].clientX) - box.left,
+					y: (event.clientY || event.changedTouches[0].clientY) - box.top,
+					z: map.getFloor(fnum).floorHeight + map.layerLocalHeight
+				}
+				var mapCoord = map.coordScreenToMap(screenCoord.x, screenCoord.y, screenCoord.z);
+				if (keepPressedObj && keepPressedObj.moveTo) {
+					keepPressedObj.moveTo({
+						x: mapCoord.x,
+						y: mapCoord.y,
+						time: 0
+					})
+					// keepPressedObj.o3d_.position.x = -map.mapScene.sceneX_-mapCoord.x;
+					// keepPressedObj.o3d_.position.z =mapCoord.y -map.mapScene.sceneZ_;
+					if (popMarker) {
+						popMarker.mapCoord_ = mapCoord
+					}
+				}
+				keepOpen = false;
+			}
+		}
+
+		function onUp() {
+			keepPressed = false;
+			map.controls.enablePan = true;
+			map.controls.enableRotate = true;
+			keepPressedObj = null;
+			keepOpen = true;
+		}
+	</script>
+</body>
+
+</html>

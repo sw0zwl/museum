@@ -1,0 +1,277 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+	<meta charset="UTF-8">
+	<title>室内地图多边形标注示例|室内三维地图引擎|易景空间地图</title>
+    <meta name="keywords" content="室内地图多边形标注示例,室内地图,三维地图引擎,三维地图制作,室内定位,易景空间地图" />
+	<meta name="description" content="室内地图多边形标注示例,易景室内三维地图引擎提供地图浏览、缩放、旋转、图层显隐等基础功能，支持自定义室内地图显示风格及样式，可自动绘制楼层热力图、散点图等专题地图，快速进行空间大数据分析展示。支持跨楼层精准的点到点之间的最短、最优路径计算，支持对路径结果进行导航和动画,并提供丰富的地图主题资源供二次开发调用。"/>
+	<link rel="shortcut icon" type="image/ico" href="../image/favicon.ico">
+	<link href="css/common.css" rel="stylesheet">
+	<style type="text/css">
+		.addmarker-floor.btn-floor-vertical {
+			position: absolute;
+			left: 2%;
+			bottom: 5%;
+		}
+		button{
+            padding: 7px 11px;
+            background-color: #fff;
+            border: none;
+            cursor: pointer;
+			border-radius: 3px;
+        }
+	</style>
+
+</head>
+
+<body>
+	<div id="map-container"></div>
+	<div class="loading">
+		<div class="lodingImg"></div>
+	</div>
+	<nav class="navbar navbar-inverse">
+		<div class="container-fluid">
+			<h1><a href="/" title="室内地图-室内三维地图" target="_blank">易景室内三维地图引擎</a> (多边形标注示例)</h1>
+			
+			<div class="tips-right">
+					<span class="tip1"></span>
+					<span class="tip2"></span>
+				</div>
+				<div class="tips-msg">
+					<div class="msg msg1">
+						<div class="erweima"></div>
+						<p>手机扫一扫进入体验</p>
+					</div>
+					<div class="msg msg2">
+						<h4>多边形标注示例</h4>
+						<p>1. 圆形标注 new esmap.ESPolygonMarker({...})</p>
+						<p>2. 方形标注 new esmap.ESPolygonMarker({...})</p>
+						<p>3. 自定义标注 new esmap.ESPolygonMarker({...})</p>
+		
+						<div style="display: none">室内地图多边形标注示例,易景室内三维地图引擎提供地图浏览、缩放、旋转、图层显隐等基础功能，支持自定义室内地图显示风格及样式，可自动绘制楼层热力图、散点图等专题地图，快速进行空间大数据分析展示。支持跨楼层精准的点到点之间的最短、最优路径计算，支持对路径结果进行导航和动画,并提供丰富的地图主题资源供二次开发调用。</div>
+					</div>
+				</div>
+		</div>
+	</nav>
+	<div class="viewmode-floor btn-floor-vertical" data-toggle="buttons">
+		<button id="btn2D" class="btn btn-default">2D</button>
+		<button id="btn3D" class="btn btn-default">3D</button>
+	</div>
+
+	<div class="addmarker-floor btn-floor-vertical" data-toggle="buttons">
+		<button id="btn1" class="btn btn-default leftbtn">添加圆形标注(单击空白处)</button>
+		<button id="btn2" class="btn btn-default leftbtn">添加方形标注</button>
+		<button id="btn3" class="btn btn-default leftbtn">添加自定义形状标注</button>
+		<button id="btn4" class="btn btn-default leftbtn">清除标注</button>
+	</div>
+	<script src="../lib/config.js"></script>
+	<script src="../lib/esmap.min.js"></script>
+	<script src="../lib/jquery-2.1.4.min.js"></script>
+    <script src="../lib/jquery.qrcode.min.js"></script>
+    <script src="../lib/tips_controls.js"></script>
+	<script type="text/javascript">
+		//定义全局map变量
+		var map;
+		var esmapID = getQueryString('id') || defaultOpt.mapID;
+		var styleid = getQueryString("styleid") || defaultOpt.themeID;
+		var rectangleMarker;
+		var circleMaker;
+		var polygonMarker;
+		var layer;
+		var storecoord = [];
+		window.onload = function () {
+			var isDynamicMarker = false;
+			var container = document.getElementById('map-container');
+			map = new esmap.ESMap({
+				container: container,
+				mapDataSrc: defaultOpt.mapDataUrl,
+				mapThemeSrc: defaultOpt.mapThemeUrl,
+				themeID: styleid
+			});
+			map.openMapById(esmapID);	//sceneId
+			map.showCompass = true;
+
+			var floorLayer;
+			map.on('loadComplete', function () {
+				var floor = map.getFloor(map.focusFloorNum);
+				console.log(map.focusFloorNum)
+				layer = floor.getOrCreateLayerByName('poly', esmap.ESLayerType.POLYGON_MARKER);
+			});
+			var count = 0;
+			var startdraw = false;
+			//为模型填充div添加点击事件
+			container.onclick = function (event) {
+				count++;
+				var fnum = map.focusFloorNum;
+				//获取地图视图的边框
+				var box = (event.target || event.srcElement).getBoundingClientRect();
+				var screenCoord = {
+					x: event.clientX - box.left,
+					y: event.clientY - box.top,
+					z: map.getFloor(fnum).floorHeight + map.layerLocalHeight
+				}
+				var mapCoord = map.coordScreenToMap(screenCoord.x, screenCoord.y, screenCoord.z);
+				if (count == 1) {
+					storecoord.push(mapCoord);
+					startdraw = true;
+				}
+				if (count == 2) {
+					startdraw = false;
+				}
+				if (count > 2) {
+					count = 0;
+					storecoord = [];
+					startdraw = false;
+					removeAll();
+				}
+			};
+			container.onmousemove = function (event) {
+				var fnum = map.focusFloorNum;
+				if (!startdraw) return;
+				var box = (event.target || event.srcElement).getBoundingClientRect();
+				var screenCoord = {
+					x: event.clientX - box.left,
+					y: event.clientY - box.top,
+					z: map.getFloor(fnum).floorHeight + map.layerLocalHeight
+				}
+				var mapCoord = map.coordScreenToMap(screenCoord.x, screenCoord.y, screenCoord.z);
+				if (count == 1 && storecoord) draw(mapCoord);
+			}
+
+			//清除功能
+			var removeAll = function () {
+				if (layer) {
+					layer.removeAll();
+					addMarker = true;
+				}
+			}
+
+			//添加圆形标注
+			document.getElementById("btn1").onclick =  function () {
+				addCircleMaker(map.center, 20);
+			};
+			//添加方形标注
+			document.getElementById("btn2").onclick =  function () {
+				addRectangleMaker(map.center);
+			};
+
+			//添加自定义形标注
+			document.getElementById("btn3").onclick =  function () {
+				addMyPolygonMaker();
+			};
+
+			document.getElementById("btn4").onclick = function () {
+				removeAll();
+			};
+
+			//2维显示
+			document.getElementById('btn2D').onclick = function () {
+				map.viewMode = esmap.ESViewMode.MODE_2D;//2维模式
+			};
+
+			//3维显示
+			document.getElementById('btn3D').onclick = function () {
+				map.viewMode = esmap.ESViewMode.MODE_3D;; //3维模式
+			};
+		};
+		function draw(coord) {
+			var center = storecoord[0];
+			if (!coord || !center) return;
+			var radius = Math.abs(Math.sqrt(Math.pow((center.x - coord.x), 2) + Math.pow((center.y - coord.y), 2)));
+			if (circleMaker) {
+				removeAll();
+			}
+			addCircleMaker(center, radius);
+		}
+		//创建矩形标注
+		function addRectangleMaker(coord) {
+			rectangleMarker = new esmap.ESPolygonMarker({
+				//设置颜色
+				color: '#9F35FF',
+				//设置透明度
+				alpha: .3,
+				//设置边框线的宽度
+				lineWidth: 1,
+				//设置高度
+				height: 6,
+				points: {
+					//设置为矩形
+					type: 'rectangle',
+					//设置此形状的中心坐标
+					center: {
+						x: coord.x,
+						y: coord.y
+					},
+					//设置矩形的宽度
+					width: 30,
+					//设置矩形的高度
+					height: 30
+				}
+			});
+
+			layer.addMarker(rectangleMarker);
+		};
+		//清除功能
+		function removeAll() {
+			if (layer) {
+				layer.removeAll();
+				addMarker = true;
+			}
+		}
+		//创建圆形标注
+		function addCircleMaker(coord, radius) {
+			// console.log("+1!")
+			circleMaker = new esmap.ESPolygonMarker({
+				//设置颜色
+				color: '#3CF9DF',
+				//设置透明度
+				alpha: 0.3,
+				//设置边框线的宽度
+				lineWidth: 2,
+				//设置高度
+				height: 6,
+				points: {
+					//设置为圆形
+					type: 'circle',
+					//设置此形状的中心坐标
+					center: {
+						x: coord.x,
+						y: coord.y
+					},
+					//设置半径
+					radius: radius,
+					//设置段数，默认为40段
+					segments: 40,
+				}
+			});
+			layer && layer.addMarker(circleMaker);
+		}
+
+		//创建自定义形状标注
+		function addMyPolygonMaker() {
+			//创建PolygonMarker自定义形状的顶点数组
+			var coords = [
+				{ x: map.center.x + 20, y: map.center.y + 20, z: 26 },
+				{ x: map.center.x + 40, y: map.center.y + 40, z: 26 },
+				{ x: map.center.x + 60, y: map.center.y + 20, z: 26 },
+				{ x: map.center.x + 40, y: map.center.y + 10, z: 26 },
+				{ x: map.center.x + 10, y: map.center.y, z: 26 },
+			];
+			polygonMarker = new esmap.ESPolygonMarker({
+				//设置透明度
+				alpha: .5,
+				//设置边框线的宽度
+				lineWidth: 1,
+				//设置高度
+				height: 6,
+				//设置多边形坐标点
+				points: coords
+			});
+			layer.addMarker(polygonMarker);
+		}
+	</script>
+</body>
+
+</html>

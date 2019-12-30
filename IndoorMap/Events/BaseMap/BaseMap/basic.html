@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8">
+    <title>室内三维地图</title>
+    <link rel="shortcut icon" type="image/ico" href="../image/favicon.ico">
+    <link href="css/common.css" rel="stylesheet">
+	<style type="text/css">
+		button {
+			padding: 7px 11px;
+			background-color: #fff;
+			border: none;
+			cursor: pointer;
+			border-radius: 3px;
+		}
+
+		.addmarker-floor.btn-floor-vertical {
+			position: absolute;
+			left: 10px;
+			bottom: 45px;
+		}
+
+		#container {
+			position: absolute;
+			width: 100%;
+			top: 40px;
+			bottom: 0px;
+		}
+		#tool-tip {
+			position: absolute;
+			color: #fff;
+			font-size: 18px;
+			height: 25px;
+			line-height: 25px;
+			padding: 0 5px;
+			z-index: 2;
+			pointer-events: none;
+			background-color: rgba(0, 0, 0, 0.3);
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+			display: none;
+		}
+		/* 以下是自定义气泡标注样式 */
+		.myPopMarker{
+		    padding: 0;
+			padding-right: 36px;
+			background: #aaa;
+			color: #fff;
+			border:1px solid #5e5e5e;
+		}
+		.myPopClose{  
+			position: absolute;
+			top: 0;
+			right: 0;
+			width: 43px;
+			height: 25px;
+			text-align: center;
+			background-color: honeydew;
+			color: #000;
+			cursor:pointer;
+        }
+        .myPopImage{
+            width: 100px;
+            height: 100px;
+        }
+	</style>    
+</head>
+<body>
+    <div class="loading">
+        <div class="lodingImg"></div>
+    </div>
+    <div id="map-container">
+    </div>
+    <script src="../lib/config.js"></script>
+    <script src="../lib/esmap.min.js"></script>
+    <script src="../lib/jquery-2.1.4.min.js"></script>
+    <script src="../lib/jquery.nicescroll.js"></script>
+    <script src="../lib/jquery.qrcode.min.js"></script>
+    <script src="../lib/tips_controls.js"></script>
+    <script src="../lib/bootstrap.min.js"></script>
+    <script type="text/javascript">
+    		var svrAddr = "wss://mx-soft.com:65517/position"
+    		var openID = getQueryString("openid") || 'no-id'
+    		            
+        var esmapID = getQueryString('id') || defaultOpt.mapID;
+        var styleid = getQueryString("styleid") || defaultOpt.themeID;
+        var container = document.getElementById('map-container');
+        var selModel = null;
+        var floorControl, toolControl, lm;
+				var loaded = false;
+				var wsock;
+
+        //楼层控制控件配置参数
+        var ctlOpt = new esmap.ESControlOptions({
+            position: esmap.ESControlPositon.RIGHT_BOTTOM,
+            showBtnCount: 7,  //默认显示楼层的个数
+            //位置x,y的偏移量
+            offset: {
+                x: 20,
+                y: 10
+            }
+            , imgURL: "image/wedgets/"
+        });
+
+        //放大、缩小控件配置
+        var ctlOpt1 = new esmap.ESControlOptions({
+            position: esmap.ESControlPositon.LEFT_TOP, //位置 左上角
+            //位置x,y的偏移量
+            offset: {
+                x: 20,
+                y: 100
+            }
+            , imgURL: "image/wedgets/"
+        });
+        
+        var map = new esmap.ESMap({
+                container: $('#map-container')[0],     //渲染dom
+            mapDataSrc: defaultOpt.mapDataUrl, //地图数据位置
+            mapThemeSrc: defaultOpt.mapThemeUrl, //主题数据位置
+                focusAlphaMode: true,              //对不可见图层启用透明设置 默认为true
+                focusAnimateMode: true,            //开启聚焦层切换的动画显示
+                focusAlpha: 0.9,                     //对不聚焦图层启用透明设置，当focusAlphaMode = true时有效
+                viewModeAnimateMode: true,         //开启2维，3维切换的动画显示
+                defaultScaleLevel: 10,
+            themeID: styleid,//样式ID
+            token:"sy0museum03"
+        });
+        var popText1 = '\
+        <table border="0">\
+          <tr> \
+            <td colspan="2" style="align: center">\
+                <h1>横梁鸡冠壶</h1>\
+            </td>\
+          </tr>\
+          <tr>\
+            <td>\
+              <img src="https://mx-soft.com:65519/public/collections/upload-195993319.jpg" class="myPopImage"/>\
+            </td>\
+            <td>\
+                考古发现，辽代鸡冠壶流行范围和分布区域主要在今天的内蒙古东部、辽宁西部和河北北部一带的辽国本土地区。\
+            </td>\
+          </tr>\
+        </table>\
+        <div class="myPopClose" >\
+            关闭\
+        </div>'
+
+        var popText2 = '\
+        <table border="0">\
+          <tr> \
+            <td colspan="2" style="align: center">\
+                <h1>玉猪龙</h1>\
+            </td>\
+          </tr>\
+          <tr>\
+            <td>\
+                <video width="100" height="100" src="https://mx-soft.com:65518/videos/test1.mp4" controls="controls">浏览器不支持该视频</video>\
+            </td>\
+            <td>\
+                红山玉龙呈勾曲形，口闭吻长，鼻端前突，上翘起棱，端面截平，有并排两个鼻孔，颈上有长毛，尾部尖收而上卷，形体酷似甲骨文中的“龙”字。\
+            </td>\
+          </tr>\
+        </table>\
+        <div class="myPopClose" >\
+            关闭\
+        </div>'
+
+//        <img src="https://mx-soft.com:65519/public/collections/upload-765819012.jpg" class="myPopImage"/>\
+
+        //打开地图数据
+        map.openMapById(esmapID);
+
+        //地图加载完成后回调方法
+        map.on('loadComplete', function () {
+          //创建楼层，放大、缩小控件
+          floorControl = new esmap.ESButtonFloorsControl(map, ctlOpt);
+
+          //保持多层和楼层切换一致
+          floorControl.onChange(function (floors, allLayer) {
+              //获取当前楼层状态是多层显示(true)还是单层显示(false)
+              if (toolControl.IsAllFloors()) {
+                  map.visibleFloorNums = map.floorNums;
+              } else {
+                  map.visibleFloorNums = [map.focusFloorNum];
+              }
+              map.focusFloorNum = map.focusFloorNum;
+          });
+          toolControl = new esmap.ESToolControl(map);
+          var zoomControl = new esmap.ESZoomControl(map, ctlOpt1);
+      	
+					lm = new esmap.ESLocationMarker({
+					url: 'image/pointer.png',
+					size: 150,
+					height: 30  
+					});        
+					map.addLocationMarker(lm);
+					lm.setPosition({
+											  x: 5030.386,
+											  y: 3264.189,
+											  fnum: 1,  
+											  height: 1.7      //离地面的偏移量
+											})     
+
+					if ('WebSocket' in window) { 
+						wsock = new WebSocket(svrAddr); 
+					} else if ('MozWebSocket' in window) { 
+							wsock = new MozWebSocket(svrAddr); 
+					} else { 
+						alert('Unsupported.'); 
+					} 
+					
+	       //连接成功时，触发事件
+	       wsock.onopen = function () {           
+	           // 使用 send() 方法发送数据
+	           wsock.send(openID);
+	       }
+	       
+	       //接收到服务端响应的数据时，触发事件
+	       wsock.onmessage = function (evt) {
+	
+	           var data = JSON.parse(evt.data);	           
+	           lm.moveTo({
+	           							x: 5030.386 + data.X,
+	           							y: 3264.189 + data.Y
+	           						});
+	           						
+	
+	           wsock.send(openID);
+	       }
+	       // 断开 web socket 连接成功触发事件
+	       wsock.onclose = function () {
+	           // alert("连接已关闭...");             
+	       };         
+
+           var popMarker1 = new esmap.ESPopMarker({
+                mapCoord:{
+                    x:5030 + 5, //设置弹框的坐标
+                    y:3246 + 5,
+                    height: 4, //控制信息窗的高度
+                    //设置弹框位于的楼层
+                    fnum: 1
+                }, 
+                className:"myPopMarker",
+                width: 300,
+                //设置弹框的高度
+                height: 200,
+                marginTop: 10,
+                //设置弹框的内容
+                content: popText1,
+                closeCallBack: function () {
+                    //信息窗点击关闭操作
+                    // alert('信息窗关闭了！');
+                },
+                created: function () {
+                    //创建完成钩子函数					
+                    $(".myPopClose").click(function(){
+                        //关闭删除
+                        popMarker1.close();
+                        //为自定义关闭按钮绑定隐藏事件
+                        //popMarker.hide();
+                    })
+                }
+            });                       
+
+            var popMarker2 = new esmap.ESPopMarker({
+                mapCoord:{
+                    x:5030 + 25, //设置弹框的坐标
+                    y:3246 + 35,
+                    height: 4, //控制信息窗的高度
+                    //设置弹框位于的楼层
+                    fnum: 1
+                }, 
+                className:"myPopMarker",
+                width: 300,
+                //设置弹框的高度
+                height: 200,
+                marginTop: 10,
+                //设置弹框的内容
+                content: popText2,
+                closeCallBack: function () {
+                    //信息窗点击关闭操作
+                    // alert('信息窗关闭了！');
+                },
+                created: function () {
+                    //创建完成钩子函数					
+                    $(".myPopClose").click(function(){
+                        //关闭删除
+                        popMarker2.close();
+                        //为自定义关闭按钮绑定隐藏事件
+                        //popMarker.hide();
+                    })
+                }
+            });                       
+		})			
+        map.showCompass = true;     //显示指南针 
+			
+    </script>
+</body>
+
+</html>

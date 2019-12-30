@@ -1,0 +1,21 @@
+/* 以下是自定义气泡标注样式 */
+.myPopMarker{
+    padding: 0;
+    padding-right: 36px;
+    background: #aaa;
+    color: #fff;
+    width:300px;
+    border:1px solid #5e5e5e;
+}
+.myPopClose{  
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 43px;
+    height: 25px;
+    text-align: center;
+    background-color: honeydew;
+    color: #000;
+    cursor:pointer;
+}
+    

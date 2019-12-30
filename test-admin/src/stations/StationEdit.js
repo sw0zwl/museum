@@ -25,6 +25,7 @@ const ProductEdit = props => {
                 <FormTab label="resources.collections.tabs.image">
                     <Poster />
                     <TextInput source="uuid" fullWidth />
+                    <NumberInput source="mac" fullWidth/>
                     <TextInput source="title" fullWidth />
                     <NumberInput source="x" fullWidth />
                     <NumberInput source="y" fullWidth />

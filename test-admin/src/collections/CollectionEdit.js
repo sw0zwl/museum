@@ -26,8 +26,6 @@ const ProductEdit = props => {
                     <TextInput source="Title" fullWidth />
                     <TextInput source="Dynasty" fullWidth />
                     <TextInput source="Category" fullWidth />
-                    <TextInput source="Status" fullWidth />
-                    <TextInput source="DisplayArea" fullWidth />
                 </FormTab>
                 <FormTab
                     label="resources.collections.tabs.description"

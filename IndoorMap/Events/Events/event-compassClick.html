@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8">
+    <title>室内地图地图指北针点击事件|室内三维地图引擎|易景空间地图</title>
+    <meta name="keywords" content="室内地图地图加载完成事件,室内地图,三维地图引擎,三维地图制作,室内定位,易景空间地图" />
+    <meta name="description" content="室内地图地图加载完成事件,易景室内三维地图引擎提供地图浏览、缩放、旋转、图层显隐等基础功能，支持自定义室内地图显示风格及样式，可自动绘制楼层热力图、散点图等专题地图，快速进行空间大数据分析展示。支持跨楼层精准的点到点之间的最短、最优路径计算，支持对路径结果进行导航和动画,并提供丰富的地图主题资源供二次开发调用。" />
+    <link rel="shortcut icon" type="image/ico" href="../image/favicon.ico">
+    <link href="css/common.css" rel="stylesheet">
+    <style>
+        .tip {
+            position: absolute;
+            top: 68px;
+            left: 50%;
+            z-index: 999;
+            background: #fff;
+            padding: 12px 20px;
+            font-size: 15px;
+            font-family: "微软雅黑";
+            border-radius: 3px;
+            margin-left: -130px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="loading">
+        <div class="lodingImg"></div>
+    </div>
+    <div class="tip">
+        <span>点击指北针，地图将转到一定角度</span>
+    </div>
+    <nav class="navbar navbar-inverse">
+        <h1><a href="/" title="室内地图-室内三维地图" target="_blank">易景室内三维地图引擎</a> （指北针点击事件）</h1>
+
+        <div class="tips-right">
+            <span class="tip1"></span>
+            <span class="tip2"></span>
+        </div>
+        <div class="tips-msg">
+            <div class="msg msg1">
+                <div class="erweima"></div>
+                <p>手机扫一扫进入体验</p>
+            </div>
+            <div class="msg msg2">
+                <h4>指北针点击事件</h4>
+                <p>1. compassClick 监听指北针事件</p>
+
+                <div style="display: none">室内地图地图加载完成事件,易景室内三维地图引擎提供地图浏览、缩放、旋转、图层显隐等基础功能，支持自定义室内地图显示风格及样式，可自动绘制楼层热力图、散点图等专题地图，快速进行空间大数据分析展示。支持跨楼层精准的点到点之间的最短、最优路径计算，支持对路径结果进行导航和动画,并提供丰富的地图主题资源供二次开发调用。</div>
+            </div>
+        </div>
+
+    </nav>
+    <div id="map-container">
+    </div>
+    <script src="../lib/config.js"></script>
+    <script src="../lib/esmap.min.js"></script>
+    <script src="../lib/jquery-2.1.4.min.js"></script>
+    <script src="../lib/jquery.qrcode.min.js"></script>
+    <script src="../lib/tips_controls.js"></script>
+    <script type="text/javascript">
+        var esmapID = getQueryString('id') || defaultOpt.mapID;
+        var styleid = getQueryString("styleid") || defaultOpt.themeID;
+        var container = document.getElementById('map-container');
+        var map = new esmap.ESMap({
+            container: container, //渲染dom
+            mapDataSrc: defaultOpt.mapDataUrl, //地图数据位置
+            mapThemeSrc: defaultOpt.mapThemeUrl, //主题数据位置
+            defaultAngle: 70
+        });
+        //打开地图数据
+        map.openMapById(esmapID);
+        map.showCompass = true; //显示指南针 
+        // 点击指北针事件
+        map.on('compassClick', function () {
+ 			alert("您点击指南针事件了");
+        });
+    </script>
+</body>
+
+</html>

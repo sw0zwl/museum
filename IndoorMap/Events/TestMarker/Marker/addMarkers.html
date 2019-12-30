@@ -1,0 +1,370 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+	<meta charset="UTF-8">
+	<title>室内地图添加标注示例|室内三维地图引擎|易景空间地图</title>
+	<meta name="keywords" content="室内地图添加标注示例,室内地图,三维地图引擎,三维地图制作,室内定位,易景空间地图" />
+	<meta name="description" content="室内地图添加标注示例,易景室内三维地图引擎提供地图浏览、缩放、旋转、图层显隐等基础功能，支持自定义室内地图显示风格及样式，可自动绘制楼层热力图、散点图等专题地图，快速进行空间大数据分析展示。支持跨楼层精准的点到点之间的最短、最优路径计算，支持对路径结果进行导航和动画,并提供丰富的地图主题资源供二次开发调用。" />
+	<link rel="shortcut icon" type="image/ico" href="../image/favicon.ico">
+	<link href="css/common.css" rel="stylesheet">
+	<style type="text/css">
+		.addmarker-floor.btn-floor-vertical {
+			position: absolute;
+			left: 2%;
+			bottom: 5%;
+		}
+
+		.modelInfo {
+			position: absolute;
+			right: 10px;
+			bottom: 100px;
+			z-index: 999;
+		}
+
+		.panel {
+			margin-bottom: 20px;
+			background-color: #fff;
+			border: 1px solid transparent;
+			border-radius: 4px;
+			-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+			box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+		}
+
+		.panel-default>.panel-heading {
+			color: #333;
+			background-color: #f5f5f5;
+			border-color: #ddd;
+		}
+
+		.panel-heading {
+			padding: 10px 15px;
+			border-bottom: 1px solid transparent;
+			border-top-left-radius: 3px;
+			border-top-right-radius: 3px;
+		}
+
+		button {
+			padding: 7px 11px;
+			background-color: #fff;
+			border: none;
+			cursor: pointer;
+			border-radius: 3px;
+		}
+	</style>
+
+</head>
+
+<body>
+	<div id="map-container"></div>
+	<div class="loading">
+		<div class="lodingImg"></div>
+	</div>
+	<nav class="navbar navbar-inverse">
+		<div class="container-fluid">
+			<h1><a href="/" title="室内地图-室内三维地图" target="_blank">易景室内三维地图引擎</a> (添加标注示例)</h1>
+
+			<div class="tips-right">
+				<span class="tip1"></span>
+				<span class="tip2"></span>
+			</div>
+			<div class="tips-msg">
+				<div class="msg msg1">
+					<div class="erweima"></div>
+					<p>手机扫一扫进入体验</p>
+				</div>
+				<div class="msg msg2">
+					<h4>添加标注示例</h4>
+					<p>1. 文本标注 new esmap.ESTextMarker({...})</p>
+					<p>2. 图片标注 new esmap.ESImageMarker({...})</p>
+					<p>3. 定位标注 new esmap.ESLocationMarker({...})</p>
+
+					<div style="display: none">室内地图添加标注示例,易景室内三维地图引擎提供地图浏览、缩放、旋转、图层显隐等基础功能，支持自定义室内地图显示风格及样式，可自动绘制楼层热力图、散点图等专题地图，快速进行空间大数据分析展示。支持跨楼层精准的点到点之间的最短、最优路径计算，支持对路径结果进行导航和动画,并提供丰富的地图主题资源供二次开发调用。</div>
+				</div>
+			</div>
+		</div>
+	</nav>
+	<div class="viewmode-floor btn-floor-vertical" data-toggle="buttons">
+		<button id="btn2D" class="btn btn-default">2D</button>
+		<button id="btn3D" class="btn btn-default">3D</button>
+	</div>
+
+	<div class="addmarker-floor btn-floor-vertical" data-toggle="buttons">
+		<button id="btn1" class="btn btn-default leftbtn">添加纯文本标注</button>
+		<button id="btn9" class="btn btn-default leftbtn">更新文本标注内容</button>
+		<button id="btn7" class="btn btn-default leftbtn">添加图片加文字标注</button>
+		<button id="btn2" class="btn btn-default leftbtn">添加普通图片标注</button>
+		<button id="btn8" class="btn btn-default leftbtn">添加带角度的图片标注</button>
+		<button id="btn3" class="btn btn-default leftbtn">添加定位标注</button>
+		<button id="btn4" class="btn btn-default leftbtn">更新定位标注</button>
+		<button id="btn5" class="btn btn-default leftbtn">动态添加图片标注</button>
+		<button id="btn6" class="btn btn-default leftbtn">清除标注</button>
+	</div>
+
+	<div class="panel panel-default modelInfo">
+		<!-- Default panel contents -->
+		<div class="panel-heading">地图坐标</div>
+
+		<!-- Table -->
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>X:</th>
+					<td>0</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th>Y:</th>
+					<td>0</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<script src="../lib/config.js"></script>
+	<script src="../lib/esmap.min.js"></script>	
+	<script src="../lib/jquery-2.1.4.min.js"></script>
+	<script src="../lib/jquery.qrcode.min.js"></script>
+	<script src="../lib/tips_controls.js"></script>
+	<script type="text/javascript">
+		//定义全局map变量3
+		var map;
+		var esmapID = getQueryString('id') || defaultOpt.mapID;
+		var styleid = getQueryString("styleid") || defaultOpt.themeID;
+		var lm;
+		var im;
+		var center;
+		var floorLayer;
+		var mapCoord;
+		var isDynamicMarker = false;
+		var tm;
+		var im3;
+		var tm2;
+		window.onload = function () {
+			var floorControl;
+			var container = document.getElementById('map-container');
+			map = new esmap.ESMap({
+				container: container,
+				mapDataSrc: defaultOpt.mapDataUrl,
+				mapThemeSrc: defaultOpt.mapThemeUrl,
+				themeID: styleid,
+				focusAlphaMode: false,
+				defaultFloornum: 1
+			});
+			map.openMapById(esmapID); //sceneId
+			map.showCompass = true;
+
+			map.on('loadComplete', function () {
+				var loading = document.getElementsByClassName("loading");
+				loading[0].style.display = "none";
+				floorLayer = map.getFloor(1);
+				center = map.center;
+			});
+			map.on("mapClickNode", function (e) {
+				mapCoord = e.hitCoord || null;
+			})
+			//为模型填充div添加点击事件
+			container.onclick = bindClick;
+			container.ontouchend = bindClick;
+			show = function (fid, coord) {
+				if (coord != null) {
+					var layer = floorLayer.getOrCreateLayerByName('dynamic', 'imageMarker');
+					var im = new esmap.ESImageMarker({
+						x: coord.x,
+						y: coord.y,
+						url: 'image/user.png',
+						spritify: true, //跟随地图缩放变化大小，默认为true，可选参数
+						height: 2,
+						size: 64
+					});
+					layer.addMarker(im);
+					floorLayer.addLayer(layer);
+				}
+			};
+
+			//清除功能
+			var removeAll = function () {
+				var re = floorLayer.removeLayersByTypes([esmap.ESLayerType.TEXT_MARKER, esmap.ESLayerType.IMAGE_MARKER]);
+				lm && map.removeLocationMarker(lm);
+			}
+
+			//添加纯文字标注方法
+			document.getElementById("btn1").onclick = function () {
+				removeAll();
+				var layer = new esmap.ESLayer('textMarker');
+				layer.name = 'mylayer'
+				//添加文本标注，默认样式
+				var gpos = floorLayer.mapCoord;
+				tm = new esmap.ESTextMarker({
+					x: gpos.x - 25,
+					y: gpos.y - 25,
+					height: 3,
+					name: "测试标签2",
+					showLevel: 20,
+					// spritify: false, //是否跟随地图缩放默认为true
+					fillcolor: "255,0,0", //填充色
+					fontsize: "12.0", //字体大小
+					strokecolor: "255,255,0" //边框色
+				});
+				layer.addMarker(tm);
+				floorLayer.addLayer(layer);
+			};
+		//添加纯文字标注方法
+		document.getElementById("btn9").onclick = function () {
+				if(tm){
+					tm.name = "ESMap文字标注"
+				}
+			};
+			
+			//添加图片加文字标注方法
+			document.getElementById("btn7").onclick = function () {
+				removeAll();
+				var layer = new esmap.ESLayer('textMarker');
+				layer.name = 'mylayer'
+				//添加文本标注，默认样式
+				var gpos = floorLayer.mapCoord;
+				tm2 = new esmap.ESTextMarker({
+					x: gpos.x - 25,
+					y: gpos.y - 25,
+					name: "测试标签2",
+					image: "image/user.png",
+					imageAlign: "bottom",
+					imageSize: 60,
+					height: 3,
+					showLevel: 20,
+					// spritify: false,
+					// scale: 0.2,
+					fillcolor: "255,0,0", //填充色
+					fontsize: "12.0", //字体大小
+					strokecolor: "255,255,0" //边框色
+				});
+				layer.addMarker(tm2);
+				floorLayer.addLayer(layer);
+			};
+			//添加图片标注方法
+			document.getElementById("btn2").onclick = function () {
+				removeAll();
+				var layer = new esmap.ESLayer('imageMarker');
+				var gpos = floorLayer.mapCoord;
+				im = new esmap.ESImageMarker({
+					x: gpos.x - 25,
+					y: gpos.y - 25,
+					url: 'image/user.png',
+					size: 64,
+					showLevel: 20,
+					height: 3,
+					// spritify:false,
+					// 或者指定宽高：size:{
+					// 	w:32,
+					// 	h:64
+					// },
+					// angle:30,  //如果设置了就是固定marker角度，与地图一起旋转。(size需要重新设置)
+					id: 1,
+					name: 'myMarker'
+				});
+				layer.addMarker(im);
+				floorLayer.addLayer(layer);
+				// im.flash({  //标注闪烁动画
+				// 	scale:1.5,
+				// 	times:5,
+				// 	time:1
+				// })
+			};
+			var angle = 30;
+			//添加带角度的图片标注方法
+			document.getElementById("btn8").onclick = function () {
+				removeAll();
+				var layer = new esmap.ESLayer('imageMarker');
+				var gpos = floorLayer.mapCoord;
+				im3 = new esmap.ESImageMarker({
+					x: gpos.x - 25,
+					y: gpos.y - 25,
+					url: 'image/user.png',
+					size: 20,
+					showLevel: 20,
+					height: 5,
+					angle: angle,
+					id: 1,
+					name: 'myMarker'
+				});
+				layer.addMarker(im3);
+				floorLayer.addLayer(layer);
+				var rotateID = setInterval(function(){
+					angle+=2
+					im3.angle = angle //直接设置角度旋转
+				},50)
+				// im3.rotateTo(angle) 带过渡效果的旋转
+				// im.flash({  //标注闪烁动画
+				// 	scale:1.5,
+				// 	times:5,
+				// 	time:1
+				// })
+			};
+			//添加定位标注
+			document.getElementById("btn3").onclick = function () {
+				removeAll();
+				var fnum = map.focusFloorNum;
+				addLocMarker(center.x, center.y, fnum);
+			};
+
+			//更新定位标注
+			document.getElementById("btn4").onclick = function () {
+				lm.direction = -40; //改变定位标注的方向
+				lm.moveTo({
+					x: map.center.x + 10,
+					y: map.center.y + 10,
+					time: 3
+				});
+			};
+
+			//动态添加标注事件
+			document.getElementById("btn5").onclick = function () {
+				isDynamicMarker = true;
+			};
+			document.getElementById("btn6").onclick = function () {
+				removeAll();
+			};
+
+			//2维显示
+			document.getElementById('btn2D').onclick = function () {
+				map.viewMode = esmap.ESViewMode.MODE_2D; //2维模式
+			};
+
+			//3维显示
+			document.getElementById('btn3D').onclick = function () {
+				map.viewMode = esmap.ESViewMode.MODE_3D;; //3维模式
+			};
+		};
+
+		function bindClick() {
+			var fnum = map.focusFloorNum;
+			var posInfo = document.querySelectorAll(".panel td");
+			if (mapCoord) {
+				posInfo[0].innerText = mapCoord.x;
+				posInfo[1].innerText = mapCoord.y;
+				if (isDynamicMarker)
+					show(fnum, mapCoord);
+			}
+		}
+		//添加定位标注方法,x、y为墨卡托坐标, fnum为楼层floornum(第几楼),angle为旋转角度
+		function addLocMarker(x, y, fnum) {
+			lm = new esmap.ESLocationMarker({
+				url: 'image/pointer.png',
+				size: 150,
+				height: 30
+			});
+			map.addLocationMarker(lm);
+			lm.setPosition({
+				x: x,
+				y: y,
+				fnum: fnum,
+				height: 1
+			})
+			//locMarker.direction = angle;  //改变定位标注的方向 ，或者使用rotateTo()方法
+		}
+	</script>
+</body>
+
+</html>

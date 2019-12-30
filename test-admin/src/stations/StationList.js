@@ -72,6 +72,7 @@ const NotificationList = props => {
         >
             <Datagrid rowClick="edit">
                 <TextField source="uuid" />
+                <TextField source="mac" />
                 <TextField source="title" />
                 <TextField source="x" />
                 <TextField source="y"/>

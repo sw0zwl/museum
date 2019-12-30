@@ -1,7 +1,8 @@
 import React from 'react';
-import mapboxgl from 'mapbox-gl'
- 
-mapboxgl.accessToken = 'pk.eyJ1Ijoic3cwendsIiwiYSI6ImNrM2YwdDAzcDAwOXIzb3FrZnY5aXBvN3YifQ.neKXdlR6Tv2byAYavJmEDg';
+import Script from 'react-load-script';
+//import mapboxgl from 'mapbox-gl'
+
+//mapboxgl.accessToken = 'pk.eyJ1Ijoic3cwendsIiwiYSI6ImNrM2YwdDAzcDAwOXIzb3FrZnY5aXBvN3YifQ.neKXdlR6Tv2byAYavJmEDg';
 
 export const styles = {
     map: { topMargin: '7em' },
@@ -18,38 +19,59 @@ class MapApp extends React.Component {
         this.state = {
           lng: 123.4547,
           lat: 41.6756,
-          zoom: 16.38
+          zoom: 16.38,
+          scriptStatus: 'no'
         };
       }
-    
+
+    handleScriptCreate() {
+      this.setState({ scriptLoaded: false })
+    }
+     
+    handleScriptError() {
+      this.setState({ scriptError: true })
+    }
+     
+    handleScriptLoad() {
+      this.setState({ scriptLoaded: true, scriptStatus: 'yes' })
+    }
+
       componentDidMount() {
-        const { lng, lat, zoom } = this.state;
-    
-        const map = new mapboxgl.Map({
-          container: this.mapContainer,
-          style: 'mapbox://styles/mapbox/streets-v9',
-          center: [lng, lat],
-          zoom
-        });
-    
-        map.on('move', () => {
-          const { lng, lat } = map.getCenter();
-    
-          this.setState({
-            lng: lng.toFixed(4),
-            lat: lat.toFixed(4),
-            zoom: map.getZoom().toFixed(2)
-          });
-        });
       }
     
       render() {
         return (
-            <div ref={el => this.mapContainer = el} 
-                 className="absolute top right left bottom"  
-                 style={{marginTop: "2em", width: '1180px', height: '730px'}}
-            />
-        );
+          <>
+            <Script
+              url="./lib/config.js"
+              onCreate={this.handleScriptCreate.bind(this)}
+              onError={this.handleScriptError.bind(this)}
+              onLoad={this.handleScriptLoad.bind(this)}
+              />
+              <Script
+              url="./lib/esmap.min.js"
+              onCreate={this.handleScriptCreate.bind(this)}
+              onError={this.handleScriptError.bind(this)}
+              onLoad={this.handleScriptLoad.bind(this)}
+            >
+              <esmap
+                container="container" //渲染dom
+                mapDataSrc="defaultOpt.mapDataUrl" //地图数据位置
+                mapThemeSrc="defaultOpt.mapThemeUrl" //主题数据位置
+                themeID="defaultOpt.themeID"//样式ID
+                visibleFloors="all"//更多初始化参数配置请参考https://www.esmap.cn/escopemap/content/cn/develope/map-config.html
+                token="sy0museum03"
+              />            
+            </Script>
+          </>
+      )
+//        return window.open('about:blank').location.href="https://mx-soft.com:65518/BaseMap/BaseMap/basic.html?id=sy_museum_3";
+//        return (
+///            <div ref={el => this.mapContainer = el} 
+//                 className="absolute top right left bottom"  
+//                 style={{marginTop: "2em", width: '1180px', height: '730px'}}
+//            />
+//        );
       }    
 }
 
