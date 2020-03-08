@@ -73,5 +73,25 @@
       "SmallImage": "http://localhost:8000/public/collections/buddha1.jpg",
       "Content": "It is a really good collection, please have a look!"
      }    
+  ],
+  "jobs": [
+    {
+      "ID": 1,
+      "Title": "Software developer 1",
+      "Location": "Auckland",
+      "Salary": "130K",
+      "Summary": "This is a good postion for you.",
+      "Link": "http://www.seek.com",
+      "CreatedAt": "2020-3-2"
+    },
+    {
+      "ID": 2,
+      "Title": "Software developer 2",
+      "Location": "Auckland",
+      "Salary": "135K",
+      "Summary": "This is a good postion for you.",
+      "Link": "http://www.seek.com",
+      "CreatedAt": "2020-3-2"
+    }
   ]
 }
