@@ -79,7 +79,7 @@
       "Salary": "130K",
       "Summary": "This is a good postion for you.",
       "Link": "http://www.seek.com",
-      "CreatedAt": "2020-3-2"
+      "CreatedAt": "2020-3-1T00:00:00.000Z"
     },
     {
       "id": 2,
@@ -88,7 +88,7 @@
       "Salary": "135K",
       "Summary": "This is a good postion for you.",
       "Link": "http://www.seek.com",
-      "CreatedAt": "2020-3-2"
+      "CreatedAt": "2020-3-2T00:00:00.000Z"
     }
   ]
 }
