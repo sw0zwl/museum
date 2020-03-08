@@ -73,7 +73,7 @@
   ],
   "jobs": [
     {
-      "ID": 1,
+      "id": 1,
       "Title": "Software developer 1",
       "Location": "Auckland",
       "Salary": "130K",
@@ -82,7 +82,7 @@
       "CreatedAt": "2020-3-2"
     },
     {
-      "ID": 2,
+      "id": 2,
       "Title": "Software developer 2",
       "Location": "Auckland",
       "Salary": "135K",
